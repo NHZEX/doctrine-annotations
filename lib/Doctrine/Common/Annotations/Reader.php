@@ -86,4 +86,24 @@ interface Reader
      * @return object|null The Annotation or NULL, if the requested annotation does not exist.
      */
     function getPropertyAnnotation(\ReflectionProperty $property, $annotationName);
+
+    /**
+     * Gets the annotations applied to a constant.
+     *
+     * @param \ReflectionConstant $constant The ReflectionConstant of the constant
+     *                                      from which the annotations should be read.
+     *
+     * @return array An array of Annotations.
+     */
+    function getConstantAnnotations(\ReflectionClassConstant $constant);
+
+    /**
+     * Gets a constant annotation.
+     *
+     * @param \ReflectionConstant $constant       The ReflectionConstant to read the annotations from.
+     * @param string              $annotationName The name of the annotation.
+     *
+     * @return object|null The Annotation or NULL, if the requested annotation does not exist.
+     */
+    function getConstantAnnotation(\ReflectionClassConstant $constant, $annotationName);
 }
