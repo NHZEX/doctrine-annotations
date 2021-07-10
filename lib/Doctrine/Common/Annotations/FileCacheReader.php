@@ -203,7 +203,7 @@ class FileCacheReader implements Reader
         if ( ! isset($this->classNameHashes[$class->name])) {
             $this->classNameHashes[$class->name] = sha1($class->name);
         }
-        $key = $this->classNameHashes[$class->name].'::'.$constant->getName();
+        $key = $this->classNameHashes[$class->name].'@'.$constant->getName();
 
         if (isset($this->loadedAnnotations[$key])) {
             return $this->loadedAnnotations[$key];

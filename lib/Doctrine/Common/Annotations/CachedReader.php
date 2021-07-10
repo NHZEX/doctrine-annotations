@@ -172,7 +172,7 @@ final class CachedReader implements Reader
     public function getConstantAnnotations(\ReflectionClassConstant $constant)
     {
         $class = $constant->getDeclaringClass();
-        $cacheKey = $class->getName().'::'.$constant->getName();
+        $cacheKey = $class->getName().'@'.$constant->getName();
 
         if (isset($this->loadedAnnotations[$cacheKey])) {
             return $this->loadedAnnotations[$cacheKey];
