@@ -2,11 +2,11 @@
 
 namespace Doctrine\Tests\Common\Annotations;
 
-use Doctrine\Common\Annotations\Annotation;
-use Doctrine\Common\Annotations\AnnotationException;
-use Doctrine\Common\Annotations\DocParser;
-use Doctrine\Common\Annotations\AnnotationRegistry;
-use Doctrine\Common\Annotations\Annotation\Target;
+use Yurun\Doctrine\Common\Annotations\Annotation;
+use Yurun\Doctrine\Common\Annotations\AnnotationException;
+use Yurun\Doctrine\Common\Annotations\DocParser;
+use Yurun\Doctrine\Common\Annotations\AnnotationRegistry;
+use Yurun\Doctrine\Common\Annotations\Annotation\Target;
 use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll;
 use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants;
 use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithConstants;
@@ -1435,7 +1435,7 @@ class Marker {
 
 namespace Doctrine\Tests\Common\Annotations\FooBar;
 
-use Doctrine\Common\Annotations\Annotation;
+use Yurun\Doctrine\Common\Annotations\Annotation;
 
 
 /** @Annotation */

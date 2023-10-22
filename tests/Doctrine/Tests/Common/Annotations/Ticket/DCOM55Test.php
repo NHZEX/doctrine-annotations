@@ -2,9 +2,9 @@
 
 namespace Doctrine\Tests\Common\Annotations\Ticket;
 
-use Doctrine\Common\Annotations\AnnotationException;
+use Yurun\Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\Tests\Common\Annotations\Fixtures\Controller;
-use Doctrine\Common\Annotations\AnnotationReader;
+use Yurun\Doctrine\Common\Annotations\AnnotationReader;
 use PHPUnit\Framework\TestCase;
 
 /**

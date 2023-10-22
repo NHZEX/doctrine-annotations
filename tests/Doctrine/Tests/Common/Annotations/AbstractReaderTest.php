@@ -2,9 +2,9 @@
 
 namespace Doctrine\Tests\Common\Annotations;
 
-use Doctrine\Common\Annotations\Annotation;
-use Doctrine\Common\Annotations\AnnotationException;
-use Doctrine\Common\Annotations\Reader;
+use Yurun\Doctrine\Common\Annotations\Annotation;
+use Yurun\Doctrine\Common\Annotations\AnnotationException;
+use Yurun\Doctrine\Common\Annotations\Reader;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass, Doctrine\Common\Annotations\AnnotationReader;
 
@@ -653,7 +653,7 @@ class DCOM106
 
 namespace Doctrine\Tests\Common\Annotations\Foo;
 
-use Doctrine\Common\Annotations\Annotation;
+use Yurun\Doctrine\Common\Annotations\Annotation;
 
 /** @Annotation */
 class Name extends Annotation
@@ -663,7 +663,7 @@ class Name extends Annotation
 
 namespace Doctrine\Tests\Common\Annotations\Bar;
 
-use Doctrine\Common\Annotations\Annotation;
+use Yurun\Doctrine\Common\Annotations\Annotation;
 
 /** @Annotation */
 class Name extends Annotation

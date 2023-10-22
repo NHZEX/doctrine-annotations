@@ -2,7 +2,7 @@
 
 namespace Doctrine\Tests\Common\Annotations;
 
-use Doctrine\Common\Annotations\Reader;
+use Yurun\Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Route;
 use Yurun\Doctrine\Common\Annotations\AnnotationReader;

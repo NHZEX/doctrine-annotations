@@ -3,3 +3,5 @@
 /composer.phar
 /phpbench.json
 /phpunit.xml
+/.idea
+/.phpunit.result.cache
