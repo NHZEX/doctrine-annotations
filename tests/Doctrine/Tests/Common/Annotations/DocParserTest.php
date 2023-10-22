@@ -102,6 +102,70 @@ DOCBLOCK;
         self::assertNull($annot->value);
    }
 
+    public function testAnnotationsPosition()
+    {
+        $parser = $this->createTestParser();
+
+        // Complete docblock
+        $docblock = <<<DOCBLOCK
+/**
+ * Some nifty class.
+ *
+ * @author Mr.X
+ * @Name(foo="bar1")
+ *
+ * Some.....
+ *
+ * @Name(foo="bar2")
+ * @Name(
+ *   foo="bar3"
+ * )
+ *
+ * End
+ */
+DOCBLOCK;
+
+        /** @var array<Name> $result */
+        $result = $parser->parse($docblock);
+        self::assertCount(3, $result);
+
+        self::assertEquals('bar1', $result[0]->foo);
+        $position = $parser->getAnnotationPosition($result[0]);
+        self::assertEquals(array (
+            'headBeginPos' => 31,
+            'beginPos' => 16,
+            'endPos' => 33,
+            'length' => 17,
+        ), $position);
+        self::assertEquals('@Name(foo="bar1")', \substr($docblock, $position['beginPos'] + $position['headBeginPos'], $position['length']));
+
+        self::assertEquals('bar2', $result[1]->foo);
+        $position = $parser->getAnnotationPosition($result[1]);
+        self::assertEquals(array (
+            'headBeginPos' => 31,
+            'beginPos' => 56,
+            'endPos' => 73,
+            'length' => 17,
+        ), $position);
+        self::assertEquals('@Name(foo="bar2")', \substr($docblock, $position['beginPos'] + $position['headBeginPos'], $position['length']));
+
+        self::assertEquals('bar3', $result[2]->foo);
+        $position = $parser->getAnnotationPosition($result[2]);
+        self::assertEquals(array (
+            'headBeginPos' => 31,
+            'beginPos' => 77,
+            'endPos' => 104,
+            'length' => 27,
+        ), $position);
+        self::assertEquals(<<<DOC
+            @Name(
+             *   foo="bar3"
+             * )
+            DOC,
+            \substr($docblock, $position['beginPos'] + $position['headBeginPos'], $position['length'])
+        );
+    }
+
     public function testDefaultValueAnnotations()
     {
         $parser = $this->createTestParser();

@@ -242,11 +242,22 @@ final class DocParser
     ];
 
     /**
+     * 注解的定位信息
+     */
+    protected \WeakMap $positionMap;
+
+    /**
+     * 开始尝试解析的位置
+     */
+    private ?int       $headBeginPos;
+
+    /**
      * Constructs a new DocParser.
      */
     public function __construct()
     {
         $this->lexer = new DocLexer;
+        $this->positionMap = new \WeakMap();
     }
 
     /**
@@ -347,6 +358,7 @@ final class DocParser
     public function parse($input, $context = '')
     {
         $pos = $this->findInitialTokenPosition($input);
+        $this->headBeginPos = $pos;
         if ($pos === null) {
             return [];
         }
@@ -659,6 +671,38 @@ final class DocParser
     }
 
     /**
+     * @param object $annotation
+     * @return array{
+     *     headBeginPos: int,
+     *     beginPos: int,
+     *     endPos: int,
+     *     length: int,
+     * }|null
+     */
+    public function getAnnotationPosition(object $annotation): ?array
+    {
+        return $this->positionMap[$annotation] ?? null;
+    }
+
+    public function getLexerInput(): string
+    {
+        return $this->lexer->getInput();
+    }
+
+    protected function setAnnotationPosition(object $annotation, int $startPos, int $endPos): void
+    {
+        $this->positionMap->offsetSet(
+            $annotation,
+            [
+                'headBeginPos' => $this->headBeginPos,
+                'beginPos' => $startPos,
+                'endPos' => $endPos,
+                'length' => $endPos - $startPos,
+            ]
+        );
+    }
+
+    /**
      * Annotation     ::= "@" AnnotationName MethodCall
      * AnnotationName ::= QualifiedName | SimpleName
      * QualifiedName  ::= NameSpacePart "\" {NameSpacePart "\"}* SimpleName
@@ -682,6 +726,11 @@ final class DocParser
         ) {
             // Annotations with dashes, such as "@foo-" or "@foo-bar", are to be discarded
             return false;
+        }
+
+        $startPos = ($this->lexer->token['position'] ?? 0);
+        if ($startPos) {
+            $startPos -= 1;
         }
 
         // only process names which are not fully qualified, yet
@@ -813,10 +862,14 @@ final class DocParser
             }
         }
 
+        $endPos = ($this->lexer->token['position'] ?? 0) + \strlen($this->lexer->token['value'] ?? '');
+
         // check if the annotation expects values via the constructor,
         // or directly injected into public properties
         if (self::$annotationMetadata[$name]['has_constructor'] === true) {
-            return new $name($values);
+            $instance = new $name($values);
+            $this->setAnnotationPosition($instance, $startPos, $endPos);
+            return $instance;
         }
 
         $instance = new $name();
@@ -836,6 +889,7 @@ final class DocParser
             $instance->{$property} = $value;
         }
 
+        $this->setAnnotationPosition($instance, $startPos, $endPos);
         return $instance;
     }
 
@@ -922,7 +976,7 @@ final class DocParser
         $identifier = $this->Identifier();
 
         if ( ! defined($identifier) && false !== strpos($identifier, '::') && '\\' !== $identifier[0]) {
-            list($className, $const) = explode('::', $identifier);
+            [$className, $const] = explode('::', $identifier);
 
             $pos = strpos($className, '\\');
             $alias = (false === $pos) ? $className : substr($className, 0, $pos);
@@ -1061,7 +1115,7 @@ final class DocParser
         }
 
         if ($this->lexer->isNextToken(DocLexer::T_AT)) {
-            return $this->Annotation();
+            return $this->Annotation(0);
         }
 
         if ($this->lexer->isNextToken(DocLexer::T_IDENTIFIER)) {
@@ -1152,7 +1206,7 @@ final class DocParser
         $this->match(DocLexer::T_CLOSE_CURLY_BRACES);
 
         foreach ($values as $value) {
-            list ($key, $val) = $value;
+            [$key, $val] = $value;
 
             if ($key !== null) {
                 $array[$key] = $val;

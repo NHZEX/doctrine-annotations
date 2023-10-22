@@ -144,4 +144,16 @@ final class DocLexer extends AbstractLexer
 
         return $type;
     }
+
+    /**
+     * @internal
+     */
+    public function getInput(): string
+    {
+        $fn = function (): string {
+            return $this->input;
+        };
+        return $fn
+            ->bindTo($this, AbstractLexer::class)();
+    }
 }
