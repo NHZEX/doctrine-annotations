@@ -220,6 +220,25 @@ class AnnotationReader implements Reader
         $this->phpParser = new PhpParser;
     }
 
+    public function getParser(): DocParser
+    {
+        return $this->parser;
+    }
+
+    /**
+     * @param object $annotation
+     * @return array{
+     *      headBeginPos: int,
+     *      beginPos: int,
+     *      endPos: int,
+     *      length: int,
+     *  }|null
+     */
+    public function getAnnotationPosition(object $annotation): ?array
+    {
+        return $this->parser->getAnnotationPosition($annotation);
+    }
+
     /**
      * {@inheritDoc}
      */
